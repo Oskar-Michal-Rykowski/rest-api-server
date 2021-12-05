@@ -9,7 +9,7 @@ router.route('/concerts').get((req, res) => {
 });
 
 router.route('/concerts/:id').get((req, res) => {
-  res.json(db.concerts.filter((item) => item.id == req.params.id));
+  res.json(db.concerts.filter((item) => item.id === req.params.id));
 });
 
 router.route('/concerts').post((req, res) => {
@@ -23,7 +23,7 @@ router.route('/concerts').post((req, res) => {
 
 router.route('/concerts/:id').put((req, res) => {
   const editedTestimonial = db.concerts.find(
-    (item) => item.id == req.params.id
+    (item) => item.id === req.params.id
   );
   const indexOfTestimonial = db.concerts.indexOf(editedTestimonial);
   const newTestimonial = {
@@ -36,7 +36,7 @@ router.route('/concerts/:id').put((req, res) => {
 
 router.route('/concerts/:id').delete((req, res) => {
   const editedTestimonial = db.concerts.find(
-    (item) => item.id == req.params.id
+    (item) => item.id === req.params.id
   );
   const indexOfTestimonial = db.concerts.indexOf(editedTestimonial);
   db.concerts.splice(indexOfTestimonial, 1);

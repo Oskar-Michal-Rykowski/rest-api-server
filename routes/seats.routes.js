@@ -9,7 +9,7 @@ router.route('/seats').get((req, res) => {
 });
 
 router.route('/seats/:id').get((req, res) => {
-  res.json(db.seats.filter((item) => item.id == req.params.id));
+  res.json(db.seats.filter((item) => item.id === req.params.id));
 });
 
 router.route('/seats/:id').post((req, res) => {

@@ -13,7 +13,7 @@ router.route('/testimonials/random').get((req, res) => {
 });
 
 router.route('/testimonials/:id').get((req, res) => {
-  res.json(db.testimonials.filter((item) => item.id == req.params.id));
+  res.json(db.testimonials.filter((item) => item.id === req.params.id));
 });
 
 router.route('/testimonials').post((req, res) => {
@@ -27,7 +27,7 @@ router.route('/testimonials').post((req, res) => {
 
 router.route('/testimonials/:id').put((req, res) => {
   const editedTestimonial = db.testimonials.find(
-    (item) => item.id == req.params.id
+    (item) => item.id === req.params.id
   );
   const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
   const newTestimonial = {
@@ -40,7 +40,7 @@ router.route('/testimonials/:id').put((req, res) => {
 
 router.route('/testimonials/:id').delete((req, res) => {
   const editedTestimonial = db.testimonials.find(
-    (item) => item.id == req.params.id
+    (item) => item.id === req.params.id
   );
   const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
   db.testimonials.splice(indexOfTestimonial, 1);
