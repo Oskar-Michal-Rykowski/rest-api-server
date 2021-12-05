@@ -1,17 +1,9 @@
 const express = require('express');
 const { arch } = require('process');
 const { v4: uuidv4 } = require('uuid');
+const db = require('./db');
 
 const app = express();
-
-const db = [
-  { id: 1, author: 'John Doe', text: 'This company is worth every coin!' },
-  {
-    id: 2,
-    author: 'Amanda Doe',
-    text: 'They really know how to make you happy.',
-  },
-];
 
 const message = { message: 'OK' };
 
@@ -23,15 +15,15 @@ app.listen(8000, () => {
 });
 
 app.get('/testimonials', (req, res) => {
-  res.json(db);
+  res.json(db.testimonials);
 });
 
 app.get('/testimonials/random', (req, res) => {
-  res.json(db[Math.floor(Math.random() * db.length)]);
+  res.json(db.testimonials[Math.floor(Math.random() * db.testimonials.length)]);
 });
 
 app.get('/testimonials/:id', (req, res) => {
-  res.json(db.filter((item) => item.id == req.params.id));
+  res.json(db.testimonials.filter((item) => item.id == req.params.id));
 });
 
 app.post('/testimonials', (req, res) => {
@@ -41,27 +33,31 @@ app.post('/testimonials', (req, res) => {
     author: author,
     text: text,
   };
-  db.push(newTestimonial);
+  db.testimonials.push(newTestimonial);
   res.json(message);
 });
 
 app.put('/testimonials/:id', (req, res) => {
   const { author, text } = req.body;
-  const editedTestimonial = db.find((item) => item.id == req.params.id);
-  const indexOfTestimonial = db.indexOf(editedTestimonial);
+  const editedTestimonial = db.testimonials.find(
+    (item) => item.id == req.params.id
+  );
+  const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
   const newTestimonial = {
     ...editedTestimonial,
     author: author,
     text: text,
   };
-  db[indexOfTestimonial] = newTestimonial;
+  db.testimonials[indexOfTestimonial] = newTestimonial;
   res.json(message);
 });
 
 app.delete('/testimonials/:id', (req, res) => {
-  const editedTestimonial = db.find((item) => item.id == req.params.id);
-  const indexOfTestimonial = db.indexOf(editedTestimonial);
-  db.splice(indexOfTestimonial, 1);
+  const editedTestimonial = db.testimonials.find(
+    (item) => item.id == req.params.id
+  );
+  const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
+  db.testimonials.splice(indexOfTestimonial, 1);
   res.json(message);
 });
 
