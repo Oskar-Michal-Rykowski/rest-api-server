@@ -36,7 +36,7 @@ router.route('/concerts/:id').put((req, res) => {
 
 router.route('/concerts/:id').delete((req, res) => {
   const editedTestimonial = db.concerts.find(
-    (item) => item.id === req.params.id
+    (item) => item.id == req.params.id
   );
   const indexOfTestimonial = db.concerts.indexOf(editedTestimonial);
   db.concerts.splice(indexOfTestimonial, 1);
