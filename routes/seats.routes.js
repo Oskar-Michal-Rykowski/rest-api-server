@@ -13,35 +13,36 @@ router.route('/seats/:id').get((req, res) => {
 });
 
 router.route('/seats').post((req, res) => {
-  const newTestimonial = {
+  const newSeat = {
     id: uuidv4(),
     day,
     seat,
     client,
     email,
   };
-  db.seats.push(newTestimonial);
+  db.seats.push(newSeat);
   res.json(message);
 });
 
 router.route('/seats/:id').put((req, res) => {
-  const editedTestimonial = db.seats.find((item) => item.id === req.params.id);
-  const indexOfTestimonial = db.seats.indexOf(editedTestimonial);
-  const newTestimonial = {
-    // ...editedTestimonial,
+  const { day, seat, client, email } = req.body;
+  const editedSeat = db.seats.find((item) => item.id === req.params.id);
+  const indexOfSeat = db.seats.indexOf(editedSeat);
+  const newSeat = {
+    ...editedSeat,
     ...(day && { day }),
     ...(seat && { seat }),
     ...(client && { client }),
     ...(email && { email }),
   };
-  db.seats[indexOfTestimonial] = newTestimonial;
+  db.seats[indexOfSeat] = newSeat;
   res.json(message);
 });
 
 router.route('/seats/:id').delete((req, res) => {
-  const editedTestimonial = db.seats.find((item) => item.id === req.params.id);
-  const indexOfTestimonial = db.seats.indexOf(editedTestimonial);
-  db.seats.splice(indexOfTestimonial, 1);
+  const editedSeat = db.seats.find((item) => item.id === req.params.id);
+  const indexOfSeat = db.seats.indexOf(editedSeat);
+  db.seats.splice(indexOfSeat, 1);
   res.json(message);
 });
 

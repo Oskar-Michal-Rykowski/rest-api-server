@@ -27,12 +27,13 @@ router.route('/testimonials').post((req, res) => {
 });
 
 router.route('/testimonials/:id').put((req, res) => {
+  const { author, text } = req.body;
   const editedTestimonial = db.testimonials.find(
     (item) => item.id === req.params.id
   );
   const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
   const newTestimonial = {
-    // ...editedTestimonial,
+    ...editedTestimonial,
     ...(author && { author }),
     ...(text && { text }),
   };

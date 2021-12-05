@@ -13,7 +13,7 @@ router.route('/concerts/:id').get((req, res) => {
 });
 
 router.route('/concerts').post((req, res) => {
-  const newTestimonial = {
+  const newConcert = {
     id: uuidv4(),
     performer,
     genre,
@@ -21,33 +21,30 @@ router.route('/concerts').post((req, res) => {
     day,
     image,
   };
-  db.concerts.push(newTestimonial);
+  db.concerts.push(newConcert);
   res.json(message);
 });
 
 router.route('/concerts/:id').put((req, res) => {
-  const editedTestimonial = db.concerts.find(
-    (item) => item.id === req.params.id
-  );
-  const indexOfTestimonial = db.concerts.indexOf(editedTestimonial);
-  const newTestimonial = {
-    // ...editedTestimonial,
+  const { performer, genre, price, day, image } = req.body;
+  const editedConcert = db.concerts.find((item) => item.id === req.params.id);
+  const indexOfConcert = db.concerts.indexOf(editedConcert);
+  const newConcert = {
+    ...editedConcert,
     ...(performer && { performer }),
     ...(genre && { genre }),
     ...(price && { price }),
     ...(day && { day }),
     ...(image && { image }),
   };
-  db.concerts[indexOfTestimonial] = newTestimonial;
+  db.concerts[indexOfConcert] = newConcert;
   res.json(message);
 });
 
 router.route('/concerts/:id').delete((req, res) => {
-  const editedTestimonial = db.concerts.find(
-    (item) => item.id === req.params.id
-  );
-  const indexOfTestimonial = db.concerts.indexOf(editedTestimonial);
-  db.concerts.splice(indexOfTestimonial, 1);
+  const editedConcert = db.concerts.find((item) => item.id === req.params.id);
+  const indexOfConcert = db.concerts.indexOf(editedConcert);
+  db.concerts.splice(indexOfConcert, 1);
   res.json(message);
 });
 
