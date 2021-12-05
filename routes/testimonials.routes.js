@@ -17,26 +17,22 @@ router.route('/testimonials/:id').get((req, res) => {
 });
 
 router.route('/testimonials').post((req, res) => {
-  const { author, text } = req.body;
   const newTestimonial = {
     id: uuidv4(),
-    author: author,
-    text: text,
+    ...req.body,
   };
   db.testimonials.push(newTestimonial);
   res.json(message);
 });
 
 router.route('/testimonials/:id').put((req, res) => {
-  const { author, text } = req.body;
   const editedTestimonial = db.testimonials.find(
     (item) => item.id == req.params.id
   );
   const indexOfTestimonial = db.testimonials.indexOf(editedTestimonial);
   const newTestimonial = {
     ...editedTestimonial,
-    author: author,
-    text: text,
+    ...req.body,
   };
   db.testimonials[indexOfTestimonial] = newTestimonial;
   res.json(message);
