@@ -12,10 +12,13 @@ router.route('/seats/:id').get((req, res) => {
   res.json(db.seats.filter((item) => item.id === req.params.id));
 });
 
-router.route('/seats/:id').post((req, res) => {
+router.route('/seats').post((req, res) => {
   const newTestimonial = {
     id: uuidv4(),
-    ...req.body,
+    day,
+    seat,
+    client,
+    email,
   };
   db.seats.push(newTestimonial);
   res.json(message);
@@ -25,8 +28,11 @@ router.route('/seats/:id').put((req, res) => {
   const editedTestimonial = db.seats.find((item) => item.id === req.params.id);
   const indexOfTestimonial = db.seats.indexOf(editedTestimonial);
   const newTestimonial = {
-    ...editedTestimonial,
-    ...req.body,
+    // ...editedTestimonial,
+    ...(day && { day }),
+    ...(seat && { seat }),
+    ...(client && { client }),
+    ...(email && { email }),
   };
   db.seats[indexOfTestimonial] = newTestimonial;
   res.json(message);
