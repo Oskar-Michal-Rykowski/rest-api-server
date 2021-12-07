@@ -13,6 +13,7 @@ router.route('/seats/:id').get((req, res) => {
 });
 
 router.route('/seats').post((req, res) => {
+  const { day, seat, client, email } = req.body;
   const newSeat = {
     id: uuidv4(),
     day,
