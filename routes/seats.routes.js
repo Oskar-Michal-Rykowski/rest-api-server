@@ -21,8 +21,26 @@ router.route('/seats').post((req, res) => {
     client,
     email,
   };
-  db.seats.push(newSeat);
-  res.json(message);
+  if (
+    db.seats.some(
+      (seat) => seat.day == newSeat.day && seat.seat == newSeat.seat
+    )
+  ) {
+    res.json({ message: 'The slot is already taken...' });
+  } else {
+    db.seats.push(newSeat);
+    res.json(message);
+  }
+  //Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
+  // function seatBooked(element) {
+  //   element.day == newSeat.day && element.seat == newSeat.seat;
+  // }
+  // if (db.seats.some(seatBooked,db.seats)) {
+  //   res.json({ message: 'The slot is already taken...' });
+  // } else {
+  //   db.seats.push(newSeat);
+  //   res.json(message);
+  // }
 });
 
 router.route('/seats/:id').put((req, res) => {
