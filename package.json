@@ -8,5 +8,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "build": "cd client && yarn install && yarn build"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
