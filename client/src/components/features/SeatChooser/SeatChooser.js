@@ -59,7 +59,7 @@ class SeatChooser extends React.Component {
 
   render() {
     const { prepareSeat } = this;
-    const { requests } = this.props;
+    const { requests, seats, chosenDay } = this.props;
 
     return (
       <div>
@@ -81,6 +81,10 @@ class SeatChooser extends React.Component {
         {requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error && (
           <Alert color="warning">Couldn't load seats...</Alert>
         )}
+        <h3>
+          Free Seats:
+          {50 - seats.filter((client) => client.day === chosenDay).length}/50
+        </h3>
       </div>
     );
   }
