@@ -11,7 +11,7 @@ class SeatChooser extends React.Component {
     );
     const { loadSeats } = this.props;
     this.socket.on('seatsUpdated', (seats) => {
-      loadSeatsData(seats);
+      this.props.loadSeatsData(seats);
     });
     loadSeats();
     this.checkSeats = setInterval(() => loadSeats(), 1000 * 60 * 2);

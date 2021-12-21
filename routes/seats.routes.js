@@ -3,6 +3,9 @@ const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const db = require('../db');
 const message = require('./message');
+const server = require('../server');
+const socket = require('socket.io');
+const io = socket(server);
 
 router.route('/seats').get((req, res) => {
   res.json(db.seats);
@@ -30,6 +33,7 @@ router.route('/seats').post((req, res) => {
   } else {
     db.seats.push(newSeat);
     res.json(message);
+    //adding event emiter all clients
     io.on('connection', (socket) => {
       socket.on('seatsUpdated', () => {
         socket.broadcast.emit('seatsUpdated', db.seats);
