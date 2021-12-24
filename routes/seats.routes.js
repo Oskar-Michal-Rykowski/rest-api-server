@@ -34,24 +34,22 @@ router.route('/seats').post((req, res) => {
     db.seats.push(newSeat);
     res.json(message);
     //adding event emiter all clients
-    io.on('connection', (socket) => {
-      socket.on('seatsUpdated', () => {
-        socket.broadcast.emit('seatsUpdated', db.seats);
-      });
-    });
+    req.io.emit('seatsUpdated', db.seats);
   }
-  //Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
-  // function seatBooked(element) {
-  //   element.day == newSeat.day && element.seat == newSeat.seat;
-  // }
-  // if (db.seats.some(seatBooked,db.seats)) {
-  //   res.json({ message: 'The slot is already taken...' });
-  // } else {
-  //   db.seats.push(newSeat);
-  //   res.json(message);
-  // }
 });
 
+//Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
+// function seatBooked(element) {
+//   element.day == newSeat.day && element.seat == newSeat.seat;
+// }
+// if (db.seats.some(seatBooked,db.seats)) {
+//   res.json({ message: 'The slot is already taken...' });
+// } else {
+//   db.seats.push(newSeat);
+//   res.json(message);
+// }
+// });
+// }
 router.route('/seats/:id').put((req, res) => {
   const { day, seat, client, email } = req.body;
   const editedSeat = db.seats.find((item) => item.id === req.params.id);
