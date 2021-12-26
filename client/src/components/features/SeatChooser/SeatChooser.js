@@ -1,11 +1,18 @@
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
+import io from 'socket.io-client';
 
 import './SeatChooser.scss';
 
 class SeatChooser extends React.Component {
   componentDidMount() {
+    this.socket = io(
+      process.env.NODE_ENV === 'production' ? '' : 'localhost:8000'
+    );
     const { loadSeats } = this.props;
+    this.socket.on('seatsUpdated', (seats) => {
+      this.props.loadSeatsData(seats);
+    });
     loadSeats();
     this.checkSeats = setInterval(() => loadSeats(), 1000 * 60 * 2);
   }
@@ -52,7 +59,7 @@ class SeatChooser extends React.Component {
 
   render() {
     const { prepareSeat } = this;
-    const { requests } = this.props;
+    const { requests, seats, chosenDay } = this.props;
 
     return (
       <div>
@@ -74,6 +81,10 @@ class SeatChooser extends React.Component {
         {requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error && (
           <Alert color="warning">Couldn't load seats...</Alert>
         )}
+        <h3>
+          Free Seats:
+          {50 - seats.filter((client) => client.day === chosenDay).length}/50
+        </h3>
       </div>
     );
   }
