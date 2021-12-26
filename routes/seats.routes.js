@@ -1,75 +1,92 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const socket = require('socket.io');
+
 const db = require('../db');
 const message = require('./message');
 const server = require('../server');
-const socket = require('socket.io');
 const io = socket(server);
+const Seat = require('../models/seat.model');
 
-router.route('/seats').get((req, res) => {
-  res.json(db.seats);
-});
-
-router.route('/seats/:id').get((req, res) => {
-  res.json(db.seats.filter((item) => item.id === req.params.id));
-});
-
-router.route('/seats').post((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const newSeat = {
-    id: uuidv4(),
-    day,
-    seat,
-    client,
-    email,
-  };
-  if (
-    db.seats.some(
-      (seat) => seat.day == newSeat.day && seat.seat == newSeat.seat
-    )
-  ) {
-    res.json({ message: 'The slot is already taken...' });
-  } else {
-    db.seats.push(newSeat);
-    res.json(message);
-    //adding event emiter all clients
-    req.io.emit('seatsUpdated', db.seats);
+router.get('/seats', async (req, res) => {
+  try {
+    res.json(await Seat.find());
+  } catch (err) {
+    res.status(500).json({ message: err });
   }
 });
 
-//Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
-// function seatBooked(element) {
-//   element.day == newSeat.day && element.seat == newSeat.seat;
-// }
-// if (db.seats.some(seatBooked,db.seats)) {
-//   res.json({ message: 'The slot is already taken...' });
-// } else {
-//   db.seats.push(newSeat);
-//   res.json(message);
-// }
-// });
-// }
-router.route('/seats/:id').put((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const editedSeat = db.seats.find((item) => item.id === req.params.id);
-  const indexOfSeat = db.seats.indexOf(editedSeat);
-  const newSeat = {
-    ...editedSeat,
-    ...(day && { day }),
-    ...(seat && { seat }),
-    ...(client && { client }),
-    ...(email && { email }),
-  };
-  db.seats[indexOfSeat] = newSeat;
-  res.json(message);
+router.get('/seats/:id', async (req, res) => {
+  try {
+    const se = await Seat.findById(req.params.id);
+    if (!se) res.status(404).json({ message: 'Not found' });
+    else res.json(se);
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
-router.route('/seats/:id').delete((req, res) => {
-  const editedSeat = db.seats.find((item) => item.id === req.params.id);
-  const indexOfSeat = db.seats.indexOf(editedSeat);
-  db.seats.splice(indexOfSeat, 1);
-  res.json(message);
+router.post('/seats', async (req, res) => {
+  try {
+    const { day, seat, client, email } = req.body;
+
+    const seatAlreadyTaken = await Seat.findOne({ day: day, seat: seat });
+
+    if (seatAlreadyTaken) {
+      res.json({ message: 'The slot is already taken...' });
+    } else {
+      const newSeat = new Seat({
+        day,
+        seat,
+        client,
+        email,
+      });
+      await newSeat.save();
+      res.json(message);
+      //adding event emiter all clients
+      req.io.emit('seatsUpdated', db.seats);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+router.put('/seats/:id', async (req, res) => {
+  try {
+    const { day, seat, client, email } = req.body;
+    const se = await Seat.findById(req.params.id);
+    if (se) {
+      await Seat.updateOne(
+        { _id: req.params.id },
+        {
+          $set: {
+            ...(day && { day }),
+            ...(seat && { seat }),
+            ...(client && { client }),
+            ...(email && { email }),
+          },
+        }
+      );
+      res.json(message);
+      // const newSeat = {
+      // db.seats[indexOfSeat] = newSeat;
+    } else res.status(404).json({ message: 'Not found...' });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+router.delete('/seats/:id', async (req, res) => {
+  try {
+    const se = await Seat.findById(req.params.id);
+    if (se) {
+      await Seat.deleteOne({ _id: req.params.id });
+      res.json(message);
+    } else res.status(404).json({ message: 'Not found...' });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 module.exports = router;

@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
 
-const db = require('../db');
 const message = require('./message');
 const Concert = require('../models/concert.model');
 
