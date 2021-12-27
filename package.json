@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "chai": "4.2.0",
+    "chai-http": "4.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mocha": "6.2.1",
     "mongoose": "5.7.1",
     "nodemon": "^2.0.15",
     "socket.io": "4.4.0",
@@ -9,7 +12,9 @@
   },
   "scripts": {
     "start": "nodemon server.js",
-    "build": "cd client && yarn install && yarn build"
+    "build": "cd client && yarn install && yarn build",
+    "test": "set NODE_ENV=test&& mocha \"./{,!(node_modules|client)/**/}*.test.js\"",
+    "test:watch": "onchange \"./**/*.js\" -i -k -- yarn test"
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
