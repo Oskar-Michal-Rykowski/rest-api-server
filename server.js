@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.get('*', (req, res) => {
 });
 
 //other
+app.use(helmet());
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 });
