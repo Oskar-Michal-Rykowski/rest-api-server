@@ -42,7 +42,7 @@ app.use((req, res) => {
 
 // connects our backend code with the database
 mongoose.connect(
-  'mongodb+srv://Admin:<password>@cluster0.n6j0j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+  `mongodb+srv://${process.env.UserDB}:${process.env.PasswordDB}@cluster0.n6j0j.mongodb.net/NewWaveDB?retryWrites=true&w=majority`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
