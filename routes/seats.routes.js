@@ -3,6 +3,9 @@ const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const db = require('../db');
 const message = require('./message');
+const server = require('../server');
+const socket = require('socket.io');
+const io = socket(server);
 
 router.route('/seats').get((req, res) => {
   res.json(db.seats);
@@ -30,19 +33,23 @@ router.route('/seats').post((req, res) => {
   } else {
     db.seats.push(newSeat);
     res.json(message);
+    //adding event emiter all clients
+    req.io.emit('seatsUpdated', db.seats);
   }
-  //Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
-  // function seatBooked(element) {
-  //   element.day == newSeat.day && element.seat == newSeat.seat;
-  // }
-  // if (db.seats.some(seatBooked,db.seats)) {
-  //   res.json({ message: 'The slot is already taken...' });
-  // } else {
-  //   db.seats.push(newSeat);
-  //   res.json(message);
-  // }
 });
 
+//Dlaczego poniższy kod nie działa? Czy chodzi o to że this się gdzieś zapodział?
+// function seatBooked(element) {
+//   element.day == newSeat.day && element.seat == newSeat.seat;
+// }
+// if (db.seats.some(seatBooked,db.seats)) {
+//   res.json({ message: 'The slot is already taken...' });
+// } else {
+//   db.seats.push(newSeat);
+//   res.json(message);
+// }
+// });
+// }
 router.route('/seats/:id').put((req, res) => {
   const { day, seat, client, email } = req.body;
   const editedSeat = db.seats.find((item) => item.id === req.params.id);
