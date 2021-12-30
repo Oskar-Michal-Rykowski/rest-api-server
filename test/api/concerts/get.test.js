@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const request = chai.request;
 
-describe('GET /concerts', () => {
+describe('GET /api/concerts', () => {
   before(async () => {
     const testConcertOne = new Concert({
       _id: '61c99cfa759e349d58b7a88z',
@@ -36,7 +36,7 @@ describe('GET /concerts', () => {
       const res = await request(server).get('/api/concerts');
       expect(res.status).to.be.equal(200);
       expect(res.body).to.be.an('array');
-      expect(res.body.length).to.be.equal(2);
+      expect(res.body.length).to.be.equal(5);
     } catch (e) {
       console.log(e);
     }
