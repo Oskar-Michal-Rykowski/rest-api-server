@@ -1,5 +1,5 @@
 const socket = require('socket.io');
-
+const sanitize = require('mongo-sanitize');
 const message = require('../controllers/message');
 const server = require('../server');
 const io = socket(server);
