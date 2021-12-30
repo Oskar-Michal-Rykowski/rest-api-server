@@ -1,5 +1,5 @@
 const socket = require('socket.io');
-
+const sanitize = require('mongo-sanitize');
 const message = require('../controllers/message');
 const server = require('../server');
 const io = socket(server);
@@ -25,7 +25,8 @@ exports.getOne = async (req, res) => {
 
 exports.createOne = async (req, res) => {
   try {
-    const { day, seat, client, email } = req.body;
+    const clean = sanitize(req.body);
+    const { day, seat, client, email } = clean;
 
     const seatAlreadyTaken = await Seat.findOne({ day: day, seat: seat });
 
